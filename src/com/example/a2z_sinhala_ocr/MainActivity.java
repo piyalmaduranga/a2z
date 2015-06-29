@@ -1,7 +1,6 @@
 package com.example.a2z_sinhala_ocr;
 
 import java.io.File;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -10,6 +9,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -67,19 +67,35 @@ public class MainActivity extends Activity {
 		}
 	}
     protected void startCameraActivity() {
-		//File file = new File(_path);
-	//	Uri outputFileUri = Uri.fromFile(file);
+		File file = new File(_path);
+		Uri outputFileUri = Uri.fromFile(file);
 
-		//final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		
 
-        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE); 
-        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+       // Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE); 
+       // startActivityForResult(cameraIntent, CAMERA_REQUEST);
 		
-	//	intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+		//intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+		startActivityForResult(intent, CAMERA_REQUEST);
 
-	//	startActivityForResult(intent, CAMERA_REQUEST);
+		
 	}
+    
+    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {    	 
+    	int width = bm.getWidth();
+    	int height = bm.getHeight();    	 
+    	float scaleWidth = ((float) newWidth) / width;    	 
+    	float scaleHeight = ((float) newHeight) / height;    	 
+    	// CREATE A MATRIX FOR THE MANIPULATION
+    	Matrix matrix = new Matrix();
+    	// RESIZE THE BIT MAP
+    	matrix.postScale(scaleWidth, scaleHeight);
+    	// RECREATE THE NEW BITMAP
+    	Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+    	return resizedBitmap;
+    	 
+    	}
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
